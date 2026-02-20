@@ -92,6 +92,7 @@ func ImagesPull(w http.ResponseWriter, r *http.Request) {
 		pullOptions.Username = authConf.Username
 		pullOptions.Password = authConf.Password
 		pullOptions.IdentityToken = authConf.IdentityToken
+		pullOptions.RegistryToken = authConf.RegistryToken
 	}
 
 	pullPolicy, err := config.ParsePullPolicy(query.PullPolicy)

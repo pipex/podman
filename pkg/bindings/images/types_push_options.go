@@ -272,3 +272,18 @@ func (o *PushOptions) GetManifestDigest() string {
 	}
 	return *o.ManifestDigest
 }
+
+// WithRegistryToken set field RegistryToken to given value
+func (o *PushOptions) WithRegistryToken(value string) *PushOptions {
+	o.RegistryToken = &value
+	return o
+}
+
+// GetRegistryToken returns value of field RegistryToken
+func (o *PushOptions) GetRegistryToken() string {
+	if o.RegistryToken == nil {
+		var z string
+		return z
+	}
+	return *o.RegistryToken
+}

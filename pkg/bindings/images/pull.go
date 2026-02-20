@@ -41,7 +41,12 @@ func Pull(ctx context.Context, rawImage string, options *PullOptions) ([]string,
 		params.Set("tlsVerify", strconv.FormatBool(!options.GetSkipTLSVerify()))
 	}
 
-	header, err := auth.MakeXRegistryAuthHeader(&imgTypes.SystemContext{AuthFilePath: options.GetAuthfile()}, options.GetUsername(), options.GetPassword())
+	var header http.Header
+	if options.GetRegistryToken() != "" {
+		header, err = auth.MakeXRegistryAuthHeaderWithToken(options.GetRegistryToken())
+	} else {
+		header, err = auth.MakeXRegistryAuthHeader(&imgTypes.SystemContext{AuthFilePath: options.GetAuthfile()}, options.GetUsername(), options.GetPassword())
+	}
 	if err != nil {
 		return nil, err
 	}

@@ -29,7 +29,12 @@ func Push(ctx context.Context, source string, destination string, options *PushO
 	if err != nil {
 		return err
 	}
-	header, err := auth.MakeXRegistryAuthHeader(&imageTypes.SystemContext{AuthFilePath: options.GetAuthfile()}, options.GetUsername(), options.GetPassword())
+	var header http.Header
+	if options.GetRegistryToken() != "" {
+		header, err = auth.MakeXRegistryAuthHeaderWithToken(options.GetRegistryToken())
+	} else {
+		header, err = auth.MakeXRegistryAuthHeader(&imageTypes.SystemContext{AuthFilePath: options.GetAuthfile()}, options.GetUsername(), options.GetPassword())
+	}
 	if err != nil {
 		return err
 	}

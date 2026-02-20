@@ -212,3 +212,18 @@ func (o *PullOptions) GetVariant() string {
 	}
 	return *o.Variant
 }
+
+// WithRegistryToken set field RegistryToken to given value
+func (o *PullOptions) WithRegistryToken(value string) *PullOptions {
+	o.RegistryToken = &value
+	return o
+}
+
+// GetRegistryToken returns value of field RegistryToken
+func (o *PullOptions) GetRegistryToken() string {
+	if o.RegistryToken == nil {
+		var z string
+		return z
+	}
+	return *o.RegistryToken
+}

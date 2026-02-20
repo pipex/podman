@@ -72,10 +72,11 @@ func PushImage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer auth.RemoveAuthfile(authfile)
 
-	var username, password string
+	var username, password, registryToken string
 	if authconf != nil {
 		username = authconf.Username
 		password = authconf.Password
+		registryToken = authconf.RegistryToken
 	}
 	options := entities.ImagePushOptions{
 		All:                    query.All,
@@ -89,6 +90,7 @@ func PushImage(w http.ResponseWriter, r *http.Request) {
 		RemoveSignatures:       query.RemoveSignatures,
 		RetryDelay:             query.RetryDelay,
 		Username:               username,
+		RegistryToken:          registryToken,
 	}
 
 	if _, found := r.URL.Query()["retry"]; found {

@@ -290,6 +290,7 @@ func dockerAuthToImageAuth(authConfig dockerAPITypes.AuthConfig) types.DockerAut
 		Username:      authConfig.Username,
 		Password:      authConfig.Password,
 		IdentityToken: authConfig.IdentityToken,
+		RegistryToken: authConfig.RegistryToken,
 	}
 }
 
@@ -299,7 +300,19 @@ func imageAuthToDockerAuth(authConfig types.DockerAuthConfig) dockerAPITypes.Aut
 		Username:      authConfig.Username,
 		Password:      authConfig.Password,
 		IdentityToken: authConfig.IdentityToken,
+		RegistryToken: authConfig.RegistryToken,
 	}
+}
+
+// MakeXRegistryAuthHeaderWithToken returns a map with the "X-Registry-Auth" header set
+// to a base64-encoded JSON AuthConfig carrying only a RegistryToken (bearer token).
+// Use this when a pre-obtained bearer token is available instead of credentials.
+func MakeXRegistryAuthHeaderWithToken(registryToken string) (http.Header, error) {
+	content, err := encodeSingleAuthConfig(types.DockerAuthConfig{RegistryToken: registryToken})
+	if err != nil {
+		return nil, err
+	}
+	return http.Header{xRegistryAuthHeader: []string{content}}, nil
 }
 
 // parseSingleAuthHeader extracts a DockerAuthConfig from an xRegistryAuthHeader value.

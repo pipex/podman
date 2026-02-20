@@ -368,10 +368,15 @@ func TestParseSingleAuthHeader(t *testing.T) {
 		},
 		// Invalid JSON
 		{input: "@", shouldErr: true},
-		// Success
+		// Success: username/password
 		{
 			input:    base64.URLEncoding.EncodeToString([]byte(`{"username":"u1","password":"p1"}`)),
 			expected: types.DockerAuthConfig{Username: "u1", Password: "p1"},
+		},
+		// Success: registrytoken
+		{
+			input:    base64.URLEncoding.EncodeToString([]byte(`{"registrytoken":"mytoken"}`)),
+			expected: types.DockerAuthConfig{RegistryToken: "mytoken"},
 		},
 	} {
 		res, err := parseSingleAuthHeader(tc.input)
@@ -417,4 +422,41 @@ func TestParseMultiAuthHeader(t *testing.T) {
 			assert.Equal(t, tc.expected, res, tc.input)
 		}
 	}
+}
+
+func TestMakeXRegistryAuthHeaderWithToken(t *testing.T) {
+	header, err := MakeXRegistryAuthHeaderWithToken("mytoken")
+	require.NoError(t, err)
+	require.Len(t, header, 1)
+	vals, ok := header[xRegistryAuthHeader]
+	require.True(t, ok)
+	require.Len(t, vals, 1)
+
+	decoded, err := base64.URLEncoding.DecodeString(vals[0])
+	require.NoError(t, err)
+
+	actual := map[string]any{}
+	err = json.Unmarshal(decoded, &actual)
+	require.NoError(t, err)
+	assert.Equal(t, map[string]any{"registrytoken": "mytoken"}, actual)
+}
+
+func TestMakeXRegistryAuthHeaderWithTokenGetCredentialsRoundtrip(t *testing.T) {
+	header, err := MakeXRegistryAuthHeaderWithToken("mytoken")
+	require.NoError(t, err)
+
+	req, err := http.NewRequest(http.MethodPost, "/", nil)
+	require.NoError(t, err)
+	for _, v := range header.Values(xRegistryAuthHeader) {
+		req.Header.Set(xRegistryAuthHeader, v)
+	}
+
+	authConf, authfile, err := GetCredentials(req)
+	require.NoError(t, err)
+	assert.Empty(t, authfile)
+	require.NotNil(t, authConf)
+	assert.Equal(t, "mytoken", authConf.RegistryToken)
+	assert.Empty(t, authConf.Username)
+	assert.Empty(t, authConf.Password)
+	assert.Empty(t, authConf.IdentityToken)
 }

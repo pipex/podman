@@ -121,3 +121,18 @@ func (o *SearchOptions) GetPassword() string {
 	}
 	return *o.Password
 }
+
+// WithRegistryToken set field RegistryToken to given value
+func (o *SearchOptions) WithRegistryToken(value string) *SearchOptions {
+	o.RegistryToken = &value
+	return o
+}
+
+// GetRegistryToken returns value of field RegistryToken
+func (o *SearchOptions) GetRegistryToken() string {
+	if o.RegistryToken == nil {
+		var z string
+		return z
+	}
+	return *o.RegistryToken
+}

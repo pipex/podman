@@ -152,6 +152,10 @@ type CopyOptions struct {
 	// IdentityToken is used to authenticate the user and get
 	// an access token for the registry.
 	IdentityToken string `json:"identitytoken,omitempty"`
+	// RegistryToken is a pre-obtained bearer token sent directly to the
+	// registry, bypassing the auth challenge workflow.  Mutually exclusive
+	// with Username/Password/Credentials and IdentityToken.
+	RegistryToken string
 
 	// ----- internal -----------------------------------------------------
 
@@ -263,7 +267,9 @@ func NewCopier(options *CopyOptions, sc *types.SystemContext) (*Copier, error) {
 	if err != nil {
 		return nil, err
 	}
-	if dockerAuthConfig != nil {
+	if options.RegistryToken != "" {
+		c.systemContext.DockerBearerRegistryToken = options.RegistryToken
+	} else if dockerAuthConfig != nil {
 		c.systemContext.DockerAuthConfig = dockerAuthConfig
 	}
 

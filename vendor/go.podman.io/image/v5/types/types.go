@@ -506,6 +506,10 @@ type DockerAuthConfig struct {
 	// token is set, password should not be set.
 	// Ref: https://docs.docker.com/registry/spec/auth/oauth/
 	IdentityToken string
+	// RegistryToken is a bearer token to be sent directly to a registry as a
+	// pre-obtained authorization token, bypassing the auth challenge workflow.
+	// Mutually exclusive with Username/Password and IdentityToken.
+	RegistryToken string
 }
 
 // OptionalBool is a boolean with an additional undefined value, which is meant

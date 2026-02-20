@@ -42,11 +42,12 @@ func SearchImages(w http.ResponseWriter, r *http.Request) {
 	}
 	defer auth.RemoveAuthfile(authfile)
 
-	var username, password, idToken string
+	var username, password, idToken, registryToken string
 	if authconf != nil {
 		username = authconf.Username
 		password = authconf.Password
 		idToken = authconf.IdentityToken
+		registryToken = authconf.RegistryToken
 	}
 
 	filters := []string{}
@@ -61,6 +62,7 @@ func SearchImages(w http.ResponseWriter, r *http.Request) {
 		Password:      password,
 		Username:      username,
 		IdentityToken: idToken,
+		RegistryToken: registryToken,
 		Filters:       filters,
 	}
 	if _, found := r.URL.Query()["tlsVerify"]; found {

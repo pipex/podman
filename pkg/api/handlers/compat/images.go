@@ -293,6 +293,7 @@ func CreateImageFromImage(w http.ResponseWriter, r *http.Request) {
 		pullOptions.Username = authConf.Username
 		pullOptions.Password = authConf.Password
 		pullOptions.IdentityToken = authConf.IdentityToken
+		pullOptions.RegistryToken = authConf.RegistryToken
 	}
 	pullOptions.Writer = os.Stderr // allows for debugging on the server
 

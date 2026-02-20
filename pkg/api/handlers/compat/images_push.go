@@ -83,20 +83,22 @@ func PushImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer auth.RemoveAuthfile(authfile)
-	var username, password string
+	var username, password, registryToken string
 	if authconf != nil {
 		username = authconf.Username
 		password = authconf.Password
+		registryToken = authconf.RegistryToken
 	}
 	options := entities.ImagePushOptions{
-		All:      query.All,
-		Authfile: authfile,
-		Compress: query.Compress,
-		Format:   query.Format,
-		Password: password,
-		Username: username,
-		Quiet:    true,
-		Progress: make(chan types.ProgressProperties),
+		All:           query.All,
+		Authfile:      authfile,
+		Compress:      query.Compress,
+		Format:        query.Format,
+		Password:      password,
+		Username:      username,
+		Quiet:         true,
+		Progress:      make(chan types.ProgressProperties),
+		RegistryToken: registryToken,
 	}
 	if _, found := r.URL.Query()["tlsVerify"]; found {
 		options.SkipTLSVerify = types.NewOptionalBool(!query.TLSVerify)

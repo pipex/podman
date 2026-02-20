@@ -287,6 +287,7 @@ func (ir *ImageEngine) Pull(ctx context.Context, rawImage string, options entiti
 	pullOptions.CertDirPath = options.CertDir
 	pullOptions.Username = options.Username
 	pullOptions.Password = options.Password
+	pullOptions.RegistryToken = options.RegistryToken
 	pullOptions.Architecture = options.Arch
 	pullOptions.OS = options.OS
 	pullOptions.Variant = options.Variant
@@ -368,6 +369,7 @@ func (ir *ImageEngine) Push(ctx context.Context, source string, destination stri
 	pushOptions.DirForceCompress = options.Compress
 	pushOptions.Username = options.Username
 	pushOptions.Password = options.Password
+	pushOptions.RegistryToken = options.RegistryToken
 	pushOptions.ManifestMIMEType = manifestType
 	pushOptions.RemoveSignatures = options.RemoveSignatures
 	pushOptions.PolicyAllowStorage = true
@@ -546,6 +548,7 @@ func (ir *ImageEngine) Search(ctx context.Context, term string, opts entities.Im
 		Username:              opts.Username,
 		Password:              opts.Password,
 		IdentityToken:         opts.IdentityToken,
+		RegistryToken:         opts.RegistryToken,
 		Filter:                *filter,
 		Limit:                 opts.Limit,
 		NoTrunc:               true,

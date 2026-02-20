@@ -1,3 +1,4 @@
+import base64
 import json
 import unittest
 import multiprocessing as mp
@@ -167,18 +168,29 @@ class ImageTestCase(APITestCase):
             r = requests.get(url, params=payload, headers=headers, timeout=5)
             self.assertEqual(r.status_code, 400, f"#5: {r.text}")
 
+        def do_search6():
+            # registrytoken field in X-Registry-Auth should be parsed as a valid
+            # pre-obtained bearer token (not rejected as a malformed header)
+            auth = base64.urlsafe_b64encode(
+                json.dumps({"registrytoken": "sometoken"}).encode()
+            ).decode()
+            headers = {"X-Registry-Auth": auth}
+            payload = {"term": "alpine"}
+            r = requests.get(url, params=payload, headers=headers, timeout=5)
+            self.assertEqual(r.status_code, 200, f"#6: {r.text}")
+
         i = 1
         # Need to explicitly set start method
         # # https://docs.python.org/dev/library/multiprocessing.html#contexts-and-start-methods
         mp.set_start_method('fork')
-        for fn in [do_search1, do_search2, do_search3, do_search4, do_search5]:
+        for fn in [do_search1, do_search2, do_search3, do_search4, do_search5, do_search6]:
             with self.subTest(i=i):
                 search = mp.Process(target=fn)
                 search.start()
                 search.join(timeout=10)
                 self.assertFalse(search.is_alive(), f"#{i} /images/search took too long")
 
-        # search_methods = [do_search1, do_search2, do_search3, do_search4, do_search5]
+        # search_methods = [do_search1, do_search2, do_search3, do_search4, do_search5, do_search6]
         # for search_method in search_methods:
         #     search = Process(target=search_method)
         #     search.start()

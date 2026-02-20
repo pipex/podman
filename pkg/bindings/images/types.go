@@ -137,6 +137,9 @@ type PushOptions struct {
 	// Authfile is the path to the authentication file. Ignored for remote
 	// calls.
 	Authfile *string
+	// RegistryToken is a pre-obtained bearer token sent directly to the
+	// registry, bypassing the auth challenge workflow.
+	RegistryToken *string `schema:"-"`
 	// Compress tarball image layers when pushing to a directory using the 'dir' transport.
 	Compress *bool
 	// CompressionFormat is the format to use for the compression of the blobs
@@ -193,6 +196,9 @@ type SearchOptions struct {
 	Username *string `schema:"-"`
 	// Password for authenticating against the registry.
 	Password *string `schema:"-"`
+	// RegistryToken is a pre-obtained bearer token sent directly to the
+	// registry, bypassing the auth challenge workflow.
+	RegistryToken *string `schema:"-"`
 }
 
 // PullOptions are optional options for pulling images
@@ -207,6 +213,9 @@ type PullOptions struct {
 	// Authfile is the path to the authentication file. Ignored for remote
 	// calls.
 	Authfile *string
+	// RegistryToken is a pre-obtained bearer token sent directly to the
+	// registry, bypassing the auth challenge workflow.
+	RegistryToken *string `schema:"-"`
 	// OS will overwrite the local operating system (OS) for image
 	// pulls.
 	OS *string

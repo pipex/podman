@@ -54,6 +54,9 @@ type ImagePullOptions struct {
 	Username string
 	// Password for authenticating against the registry.
 	Password string
+	// RegistryToken is a pre-obtained bearer token sent directly to the registry.
+	// Mutually exclusive with Username/Password.
+	RegistryToken string
 	// Arch will overwrite the local architecture for image pulls.
 	Arch string
 	// OS will overwrite the local operating system (OS) for image
@@ -162,6 +165,9 @@ type ImagePushOptions struct {
 	// CompressionFormat is used exclusively, and blobs of other compression
 	// algorithms are not reused.
 	ForceCompressionFormat bool
+	// RegistryToken is a pre-obtained bearer token sent directly to the registry.
+	// Mutually exclusive with Username/Password.
+	RegistryToken string
 }
 
 // ImagePushReport is the response from pushing an image.
@@ -197,6 +203,9 @@ type ImageSearchOptions struct {
 	SkipTLSVerify types.OptionalBool
 	// ListTags search the available tags of the repository
 	ListTags bool
+	// RegistryToken is a pre-obtained bearer token sent directly to the registry.
+	// Mutually exclusive with Username/Password and IdentityToken.
+	RegistryToken string
 }
 
 // ImageSearchReport is the response from searching images.
